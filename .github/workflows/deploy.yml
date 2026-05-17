@@ -1,0 +1,49 @@
+# ============================================
+#  deploy.yml - Vue3 管理后台自动化部署
+#  触发条件：push 到 main 分支
+# ============================================
+name: Deploy Houduan to Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npx vue-tsc --noEmit
+
+      - name: Build
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          port: 22
+          username: root
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          command: |
+            set -e
+            # 同步构建产物到服务器
+            rsync -avz --delete /home/runner/work/houduan/houduan/dist/ root@127.0.0.1:/www/sushang-houduan/
+            # 重新加载 nginx
+            nginx -s reload
