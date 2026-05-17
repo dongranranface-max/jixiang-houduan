@@ -29,17 +29,11 @@ jobs:
         run: npm run build
 
       - name: Create tar archive
-        run: tar -czf dist.tar.gz -C dist .
+        run: tar -czf sushang-houduan-dist.tar.gz -C dist .
 
       - name: Deploy to Server
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          port: 22
-          username: root
-          key: ${{ secrets.DEPLOY_SSH_KEY }}
-          script: |
-            set -e
-            mkdir -p /www/sushang-houduan
-            echo "${{ secrets.DEPLOY_SSH_KEY }}" > /tmp/deploy_key.pem && chmod 600 /tmp/deploy_key.pem
-            cat ${{ github.workspace }}/dist.tar.gz | ssh -o StrictHostKeyChecking=no -i /tmp/deploy_key.pem root@47.96.102.163 "cd /www/sushang-houduan && tar -xz && nginx -s reload"
+        run: |
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > /tmp/deploy_key.pem
+          chmod 600 /tmp/deploy_key.pem
+          ssh -o StrictHostKeyChecking=no -i /tmp/deploy_key.pem root@${{ secrets.DEPLOY_HOST }} "mkdir -p /www/sushang-houduan"
+          cat sushang-houduan-dist.tar.gz | ssh -o StrictHostKeyChecking=no -i /tmp/deploy_key.pem root@${{ secrets.DEPLOY_HOST }} "cd /www/sushang-houduan && tar -xz && rm sushang-houduan-dist.tar.gz && nginx -s reload"
