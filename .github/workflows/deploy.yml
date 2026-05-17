@@ -17,23 +17,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
       - name: Install dependencies
-        run: rm -rf node_modules && pnpm install
+        run: pnpm install
 
       - name: Build
         run: pnpm run build
-        env:
-          NODE_ENV: production
+
+      - name: Create tar archive
+        run: tar -czf /tmp/sushang-houduan-dist.tar.gz -C dist .
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@v0.1.10
@@ -44,7 +40,7 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           command: |
             set -e
-            # 同步构建产物到服务器
-            rsync -avz --delete /home/runner/work/sushangshop-houduan/sushangshop-houduan/dist/ root@127.0.0.1:/www/sushang-houduan/
-            # 重新加载 nginx
+            mkdir -p /www/sushang-houduan
+            tar -xzf - -C /www/sushang-houduan/
             nginx -s reload
+          tar: /tmp/sushang-houduan-dist.tar.gz
