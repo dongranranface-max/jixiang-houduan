@@ -45,6 +45,16 @@ export const adminRoutes: AppRouteRecord = {
       }
     },
     {
+      path: 'categories',
+      name: 'AdminCategories',
+      component: '/admin/categories',
+      meta: {
+        title: '分类管理',
+        icon: 'ri:folder-3-line',
+        keepAlive: true
+      }
+    },
+    {
       path: 'orders',
       name: 'AdminOrders',
       component: '/admin/orders',

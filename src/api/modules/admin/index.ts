@@ -15,6 +15,7 @@ export * from './menu'
 export * from './user'
 
 // Product
+// (category types/fetchers also exported from product.ts)
 export * from './product'
 
 // Order
