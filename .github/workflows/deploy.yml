@@ -1,5 +1,5 @@
 # ============================================
-#  deploy.yml - Vue3 管理后台自动化部署
+#  deploy.yml - 集享公社管理后台自动化部署
 #  触发条件：push 到 main 分支
 # ============================================
 name: Deploy Houduan to Production
@@ -29,11 +29,16 @@ jobs:
         run: npm run build
 
       - name: Create tar archive
-        run: tar -czf sushang-houduan-dist.tar.gz -C dist .
+        run: tar -czf jixiang-houduan-dist.tar.gz -C dist .
 
       - name: Deploy to Server
         run: |
           echo "${{ secrets.DEPLOY_SSH_KEY }}" > /tmp/deploy_key.pem
           chmod 600 /tmp/deploy_key.pem
-          ssh -o StrictHostKeyChecking=no -i /tmp/deploy_key.pem root@${{ secrets.DEPLOY_HOST }} "mkdir -p /www/sushang-houduan"
-          cat sushang-houduan-dist.tar.gz | ssh -o StrictHostKeyChecking=no -i /tmp/deploy_key.pem root@${{ secrets.DEPLOY_HOST }} "cd /www/sushang-houduan && tar -xz && nginx -s reload"
+          ssh -o StrictHostKeyChecking=no -i /tmp/deploy_key.pem root@${{ secrets.DEPLOY_HOST }} "mkdir -p /www/jixiang-houduan"
+          cat jixiang-houduan-dist.tar.gz | ssh -o StrictHostKeyChecking=no -i /tmp/deploy_key.pem root@${{ secrets.DEPLOY_HOST }} "cd /www/jixiang-houduan && tar -xz && nginx -s reload"
+
+      - name: Health Check
+        run: |
+          sleep 3
+          ssh -o StrictHostKeyChecking=no -i /tmp/deploy_key.pem root@${{ secrets.DEPLOY_HOST }} "curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/admin/ || echo 'HEALTH_CHECK_FAILED'"
