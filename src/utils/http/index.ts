@@ -84,7 +84,8 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse<BaseResponse>) => {
     const { code, msg } = response.data
-    if (code === ApiStatus.success) return response
+    // 兼容 code: 0（业务成功）和 code: 200（HTTP 成功）
+    if (code === 0 || code === ApiStatus.success) return response
     if (code === ApiStatus.unauthorized) handleUnauthorizedError(msg)
     throw createHttpError(msg || $t('httpMsg.requestFailed'), code)
   },
