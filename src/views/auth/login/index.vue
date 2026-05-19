@@ -142,22 +142,22 @@
     {
       key: 'super',
       label: t('login.roles.super'),
-      userName: 'Super',
-      password: '123456',
+      userName: 'admin',
+      password: 'admin123',
       roles: ['R_SUPER']
     },
     {
       key: 'admin',
       label: t('login.roles.admin'),
-      userName: 'Admin',
-      password: '123456',
+      userName: 'admin',
+      password: 'admin123',
       roles: ['R_ADMIN']
     },
     {
       key: 'user',
       label: t('login.roles.user'),
-      userName: 'User',
-      password: '123456',
+      userName: 'admin',
+      password: 'admin123',
       roles: ['R_USER']
     }
   ])
@@ -219,8 +219,8 @@
       // 登录请求
       const { username, password } = formData
 
-      const { token, refreshToken } = await fetchLogin({
-        userName: username,
+      const { token } = await fetchLogin({
+        username,
         password
       })
 
@@ -230,7 +230,7 @@
       }
 
       // 存储 token 和登录状态
-      userStore.setToken(token, refreshToken)
+      userStore.setToken(token)
       userStore.setLoginStatus(true)
 
       // 登录成功处理

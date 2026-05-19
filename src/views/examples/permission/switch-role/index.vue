@@ -57,7 +57,7 @@
             :key="account.key"
             class="p-5 border border-g-400 rounded-lg tad-300"
             :class="{
-              'bg-theme/12 !border-theme': currentUser.userName === account.userName
+              'bg-theme/12 !border-theme': currentUser.username === account.username
             }"
           >
             <div class="mb-4">
@@ -65,14 +65,14 @@
                 <h4 class="m-0 mb-2 text-base font-semibold">{{ account.label }}</h4>
                 <p class="m-0 mb-2 leading-[1.5] text-g-700">{{ account.description }}</p>
                 <div class="flex flex-col gap-1">
-                  <span class="text-xs text-g-600">用户名: {{ account.userName }}</span>
+                  <span class="text-xs text-g-600">用户名: {{ account.username }}</span>
                   <span class="text-xs text-g-600">角色: {{ account.roles.join(', ') }}</span>
                 </div>
               </div>
             </div>
             <div class="text-right">
               <ElButton
-                v-if="currentUser.userName !== account.userName"
+                v-if="currentUser.username !== account.username"
                 type="primary"
                 @click="switchRole(account)"
                 :loading="switching"
@@ -110,8 +110,8 @@
     {
       key: 'super',
       label: t('login.roles.super'),
-      userName: 'Super',
-      password: '123456',
+      username: 'admin',
+      password: 'admin123',
       roles: ['R_SUPER'],
       color: '#E6A23C',
       description: '拥有系统最高权限，可以访问所有功能模块'
@@ -119,8 +119,8 @@
     {
       key: 'admin',
       label: t('login.roles.admin'),
-      userName: 'Admin',
-      password: '123456',
+      username: 'admin',
+      password: 'admin123',
       roles: ['R_ADMIN'],
       color: '#409EFF',
       description: '拥有管理权限，可以管理用户和部分系统设置'
@@ -128,8 +128,8 @@
     {
       key: 'user',
       label: t('login.roles.user'),
-      userName: 'User',
-      password: '123456',
+      username: 'admin',
+      password: 'admin123',
       roles: ['R_USER'],
       color: '#67C23A',
       description: '普通用户权限，只能访问基础功能模块'
@@ -162,7 +162,7 @@
    * 账号信息类型
    */
   interface AccountInfo {
-    userName: string
+    username: string
     password: string
     role?: string
     roles?: string[]
@@ -178,8 +178,8 @@
       switching.value = true
 
       // 模拟登录请求
-      const { token, refreshToken } = await fetchLogin({
-        userName: account.userName,
+      const { token } = await fetchLogin({
+        username: account.username,
         password: account.password
       })
 
@@ -189,7 +189,7 @@
       }
 
       // 存储token和用户信息
-      userStore.setToken(token, refreshToken)
+      userStore.setToken(token)
       const userInfo = await fetchGetUserInfo()
       userStore.setUserInfo(userInfo)
 
