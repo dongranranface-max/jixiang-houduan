@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - main
+      - clean
 
 jobs:
   build-and-deploy:
@@ -35,7 +36,7 @@ jobs:
         run: |
           echo "${{ secrets.DEPLOY_SSH_KEY }}" > /tmp/deploy_key.pem
           chmod 600 /tmp/deploy_key.pem
-          ssh -o StrictHostKeyChecking=no -i /tmp/deploy_key.pem root@${{ secrets.DEPLOY_HOST }} "mkdir -p /www/jixiang-houduan"
+          ssh -o StrictHostKeyChecking=no -i /tmp/deploy_key.pem root@${{ secrets.DEPLOY_HOST }} "rm -rf /www/jixiang-houduan && mkdir -p /www/jixiang-houduan"
           cat jixiang-houduan-dist.tar.gz | ssh -o StrictHostKeyChecking=no -i /tmp/deploy_key.pem root@${{ secrets.DEPLOY_HOST }} "cd /www/jixiang-houduan && tar -xz && nginx -s reload"
 
       - name: Health Check
