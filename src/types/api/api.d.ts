@@ -71,17 +71,25 @@ declare namespace Api {
     /** 登录响应 */
     interface LoginResponse {
       token: string
-      refreshToken: string
+      refreshToken?: string
+      userId?: string
+      username?: string
+      nickname?: string
+      role?: string
+      roles?: string[]
     }
 
     /** 用户信息 */
     interface UserInfo {
-      buttons: string[]
-      roles: string[]
-      userId: number
+      userId: string
       userName: string
-      email: string
+      username: string
+      role: string
+      roles?: string[]
+      buttons?: string[]
+      email?: string
       avatar?: string
+      nickname?: string
     }
   }
 
