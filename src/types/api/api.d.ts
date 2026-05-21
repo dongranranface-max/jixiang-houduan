@@ -89,7 +89,7 @@ declare namespace Api {
       buttons?: string[]
       email?: string
       avatar?: string
-      nickname?: string
+      nickname: string
     }
   }
 

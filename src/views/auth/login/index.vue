@@ -143,13 +143,18 @@
       loading.value = true
 
       const { username, password } = formData
-      const { token } = await fetchLogin({ username, password })
+      const loginData = await fetchLogin({ username, password })
 
-      if (!token) {
-        throw new Error('Login failed - no token received')
-      }
-
-      userStore.setToken(token)
+      userStore.setToken(loginData.token)
+      userStore.setUserInfo({
+        userId: loginData.admin.id,
+        userName: loginData.admin.username,
+        username: loginData.admin.username,
+        nickname: loginData.admin.nickname,
+        role: loginData.admin.role,
+        roles: loginData.admin.roles || [],
+        buttons: loginData.admin.buttons || []
+      })
       userStore.setLoginStatus(true)
       showLoginSuccessNotice()
 

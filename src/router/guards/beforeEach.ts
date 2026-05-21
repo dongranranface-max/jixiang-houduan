@@ -48,7 +48,7 @@ import { staticRoutes } from '../routes/staticRoutes'
 import { loadingService } from '@/utils/ui'
 import { useCommon } from '@/hooks/core/useCommon'
 import { useWorktabStore } from '@/store/modules/worktab'
-import { fetchGetUserInfo } from '@/api/auth'
+import { ensureAdminUserInfo } from '@/api/auth'
 import { ApiStatus } from '@/utils/http/status'
 import { isHttpError } from '@/utils/http/error'
 import { RouteRegistry, MenuProcessor, IframeRouteManager, RoutePermissionValidator } from '../core'
@@ -350,17 +350,15 @@ async function handleDynamicRoutes(
       return
     }
 
-    // 标记初始化失败，防止死循环
-    routeInitFailed = true
     routeInitInProgress = false
 
-    // 输出详细错误信息，便于排查
     if (isHttpError(error)) {
       console.error(`[RouteGuard] 错误码: ${error.code}, 消息: ${error.message}`)
     }
 
-    // 跳转到 500 页面，使用 replace 避免产生历史记录
-    next({ name: 'Exception500', replace: true })
+    // 资料/权限获取失败：回登录页（profile 404 不再弹「资源不存在」）
+    useUserStore().logOut()
+    next(false)
   }
 }
 
@@ -369,9 +367,8 @@ async function handleDynamicRoutes(
  */
 async function fetchUserInfo(): Promise<void> {
   const userStore = useUserStore()
-  const data = await fetchGetUserInfo()
+  const data = await ensureAdminUserInfo(userStore.accessToken, userStore.info)
   userStore.setUserInfo(data)
-  // 检查并清理工作台标签页（如果是不同用户登录）
   userStore.checkAndClearWorktabs()
 }
 

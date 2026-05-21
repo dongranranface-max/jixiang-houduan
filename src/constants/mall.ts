@@ -29,3 +29,23 @@ export const ADMIN_ROLE_MAP: Record<string, string[]> = {
 export function mapAdminRoleToFrontend(role: string): string[] {
   return ADMIN_ROLE_MAP[role] || ['R_ADMIN']
 }
+
+/** 管理端按钮权限（与 API admin-permissions 一致） */
+export const ADMIN_ROLE_BUTTONS: Record<string, string[]> = {
+  super: ['*'],
+  operator: [
+    'mall:view',
+    'product:edit',
+    'order:ship',
+    'user:view',
+    'coupon:edit',
+    'ticket:reply',
+    'refund:approve',
+    'config:view'
+  ],
+  merchant: ['mall:view', 'product:edit', 'order:view']
+}
+
+export function mapAdminButtons(role: string): string[] {
+  return ADMIN_ROLE_BUTTONS[role] || []
+}
