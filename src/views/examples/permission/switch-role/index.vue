@@ -92,7 +92,7 @@
   import { computed, ref } from 'vue'
   import { useUserStore } from '@/store/modules/user'
   import { useI18n } from 'vue-i18n'
-  import { fetchLogin, fetchGetUserInfo } from '@/api/auth'
+  import { fetchLogin } from '@/api/auth'
 
   defineOptions({ name: 'PermissionSwitchRole' })
 
@@ -178,20 +178,26 @@
       switching.value = true
 
       // 模拟登录请求
-      const { token } = await fetchLogin({
+      const loginData = await fetchLogin({
         username: account.username,
         password: account.password
       })
 
-      // 验证token
-      if (!token) {
+      if (!loginData.token) {
         throw new Error('Login failed - no token received')
       }
 
       // 存储token和用户信息
-      userStore.setToken(token)
-      const userInfo = await fetchGetUserInfo()
-      userStore.setUserInfo(userInfo)
+      userStore.setToken(loginData.token)
+      userStore.setUserInfo({
+        userId: loginData.admin.id,
+        userName: loginData.admin.username,
+        username: loginData.admin.username,
+        nickname: loginData.admin.nickname,
+        role: loginData.admin.role,
+        roles: loginData.admin.roles || [],
+        buttons: loginData.admin.buttons || []
+      })
 
       // 延迟刷新页面以应用新权限
       setTimeout(() => {
