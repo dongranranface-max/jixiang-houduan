@@ -1,10 +1,10 @@
 /**
- * 会员等级配置 API
+ * 会员等级配置 API（管理端）
  */
 import request from '@/utils/http'
 
 export interface LevelConfigItem {
-  level: number
+  level: number | string
   name: string
   icon: string
   minPerformance: number
@@ -12,7 +12,7 @@ export interface LevelConfigItem {
 }
 
 export interface LevelConfigParams {
-  level: number
+  level: number | string
   name: string
   icon: string
   minPerformance: number
@@ -20,9 +20,14 @@ export interface LevelConfigParams {
 }
 
 export function fetchLevelConfigs() {
-  return request.get<LevelConfigItem[]>({ url: '/api/v1/level/configs' })
+  return request
+    .get<{ list: LevelConfigItem[] }>({ url: '/api/v1/admin/level/configs' })
+    .then((res) => res.list || [])
 }
 
-export function fetchUpdateLevelConfig(id: number, data: LevelConfigParams) {
-  return request.put({ url: `/api/v1/admin/level/configs/${id}`, data })
+export function fetchUpdateLevelConfig(level: number | string, data: LevelConfigParams) {
+  return request.put({
+    url: `/api/v1/admin/level/configs/${level}`,
+    data
+  })
 }

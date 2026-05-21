@@ -41,7 +41,7 @@ export const SETTING_DEFAULT_CONFIG = {
   systemThemeMode: SystemThemeEnum.AUTO,
   /** 菜单风格 */
   menuThemeType: MenuThemeEnum.DESIGN,
-  /** 系统主题颜色 */
+  /** 系统主题颜色（集享公社品牌金） */
   systemThemeColor: AppConfig.systemMainColor[0],
   /** 是否显示菜单按钮 */
   showMenuButton: true,
@@ -54,11 +54,11 @@ export const SETTING_DEFAULT_CONFIG = {
   /** 是否显示工作台标签 */
   showWorkTab: true,
   /** 是否显示语言切换 */
-  showLanguage: true,
+  showLanguage: false,
   /** 是否显示进度条 */
   showNprogress: false,
   /** 是否显示设置引导 */
-  showSettingGuide: true,
+  showSettingGuide: false,
   /** 是否显示节日文本 */
   showFestivalText: false,
   /** 是否显示水印 */

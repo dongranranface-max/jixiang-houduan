@@ -1,6 +1,7 @@
 {
-  "name": "jixiang-houduan",
-  "version": "0.0.0",
+  "name": "jixiang-gongshe-admin",
+  "version": "1.0.0",
+  "description": "集享公社电商管理后台",
   "type": "module",
   "engines": {
     "node": ">=20.19.0",
@@ -97,6 +98,7 @@
     "globals": "^15.9.0",
     "husky": "^9.1.5",
     "lint-staged": "^15.5.2",
+    "postcss-html": "^1.8.1",
     "prettier": "^3.5.3",
     "rollup-plugin-visualizer": "^5.12.0",
     "sass": "^1.81.0",

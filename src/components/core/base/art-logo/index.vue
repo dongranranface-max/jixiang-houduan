@@ -1,15 +1,16 @@
-<!-- 系统logo -->
+<!-- 集享公社 Logo -->
 <template>
   <div class="flex-cc">
-    <img :style="logoStyle" src="@imgs/common/logo.webp" alt="logo" class="w-full h-full" />
+    <img :style="logoStyle" :src="logoSrc" alt="集享公社" class="w-full h-full object-contain" />
   </div>
 </template>
 
 <script setup lang="ts">
+  import logoImg from '@imgs/common/logo.png'
+
   defineOptions({ name: 'ArtLogo' })
 
   interface Props {
-    /** logo 大小 */
     size?: number | string
   }
 
@@ -17,5 +18,6 @@
     size: 36
   })
 
-  const logoStyle = computed(() => ({ width: `${props.size}px` }))
+  const logoSrc = logoImg
+  const logoStyle = computed(() => ({ width: `${props.size}px`, height: `${props.size}px` }))
 </script>

@@ -118,6 +118,14 @@ const getErrorMessage = (status: number): string => {
  * @param error 错误对象
  * @returns 错误对象
  */
+/** 从响应体提取后端错误文案（Nest: message / 业务: msg） */
+export function getServerErrorMessage(data: unknown): string | undefined {
+  if (!data || typeof data !== 'object') return undefined
+  const body = data as { msg?: string; message?: string }
+  const text = body.msg || body.message
+  return typeof text === 'string' && text.trim() ? text.trim() : undefined
+}
+
 export function handleError(error: AxiosError<ErrorResponse>): never {
   // 处理取消的请求
   if (error.code === 'ERR_CANCELED') {
@@ -126,7 +134,7 @@ export function handleError(error: AxiosError<ErrorResponse>): never {
   }
 
   const statusCode = error.response?.status
-  const errorMessage = error.response?.data?.msg || error.message
+  const serverMsg = getServerErrorMessage(error.response?.data)
   const requestConfig = error.config
 
   // 处理网络错误
@@ -137,10 +145,11 @@ export function handleError(error: AxiosError<ErrorResponse>): never {
     })
   }
 
-  // 处理 HTTP 状态码错误
-  const message = statusCode
-    ? getErrorMessage(statusCode)
-    : errorMessage || $t('httpMsg.requestFailed')
+  // 处理 HTTP 状态码错误（优先展示后端返回的具体原因）
+  const message =
+    serverMsg ||
+    (statusCode ? getErrorMessage(statusCode) : undefined) ||
+    $t('httpMsg.requestFailed')
   throw new HttpError(message, statusCode || ApiStatus.error, {
     data: error.response.data,
     url: requestConfig?.url,

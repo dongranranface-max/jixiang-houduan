@@ -27,22 +27,20 @@
           />
           <div class="w-[calc(100%-60px)] h-full">
             <span class="block text-sm font-medium text-g-800 truncate">{{
-              userInfo.userName
+              userInfo.nickname || userInfo.username || '管理员'
             }}</span>
-            <span class="block mt-0.5 text-xs text-g-500 truncate">{{ userInfo.email }}</span>
+            <span class="block mt-0.5 text-xs text-g-500 truncate">{{
+              userInfo.username || ''
+            }}</span>
           </div>
         </div>
         <ul class="py-4 mt-3 border-t border-g-300/80">
-          <li class="btn-item" @click="goPage('/system/user-center')">
-            <ArtSvgIcon icon="ri:user-3-line" />
-            <span>{{ $t('topBar.user.userCenter') }}</span>
-          </li>
-          <li class="btn-item" @click="toDocs()">
-            <ArtSvgIcon icon="ri:book-2-line" />
+          <li class="btn-item" @click="openLink(WEB_LINKS.MALL)">
+            <ArtSvgIcon icon="ri:smartphone-line" />
             <span>{{ $t('topBar.user.docs') }}</span>
           </li>
-          <li class="btn-item" @click="toGithub()">
-            <ArtSvgIcon icon="ri:github-line" />
+          <li class="btn-item" @click="openLink(WEB_LINKS.API_DOCS)">
+            <ArtSvgIcon icon="ri:file-code-line" />
             <span>{{ $t('topBar.user.github') }}</span>
           </li>
           <li class="btn-item" @click="lockScreen()">
@@ -61,7 +59,6 @@
 
 <script setup lang="ts">
   import { useI18n } from 'vue-i18n'
-  import { useRouter } from 'vue-router'
   import { ElMessageBox } from 'element-plus'
   import { useUserStore } from '@/store/modules/user'
   import { WEB_LINKS } from '@/utils/constants'
@@ -69,33 +66,14 @@
 
   defineOptions({ name: 'ArtUserMenu' })
 
-  const router = useRouter()
   const { t } = useI18n()
   const userStore = useUserStore()
 
   const { getUserInfo: userInfo } = storeToRefs(userStore)
   const userMenuPopover = ref()
 
-  /**
-   * 页面跳转
-   * @param {string} path - 目标路径
-   */
-  const goPage = (path: string): void => {
-    router.push(path)
-  }
-
-  /**
-   * 打开文档页面
-   */
-  const toDocs = (): void => {
-    window.open(WEB_LINKS.DOCS)
-  }
-
-  /**
-   * 打开 GitHub 页面
-   */
-  const toGithub = (): void => {
-    window.open(WEB_LINKS.GITHUB)
+  const openLink = (url: string): void => {
+    window.open(url, '_blank')
   }
 
   /**

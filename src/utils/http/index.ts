@@ -17,7 +17,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import { useUserStore } from '@/store/modules/user'
 import { ApiStatus } from './status'
-import { HttpError, handleError, showError, showSuccess } from './error'
+import { HttpError, getServerErrorMessage, handleError, showError, showSuccess } from './error'
 import { $t } from '@/locales'
 import { BaseResponse } from '@/types'
 
@@ -80,17 +80,36 @@ axiosInstance.interceptors.request.use(
   }
 )
 
+/** 是否为管理员登录接口（登录失败不应触发全局登出） */
+function isAdminLoginUrl(url?: string): boolean {
+  if (!url) return false
+  return /\/auth\/admin\/login|\/admin\/auth\/login/.test(url)
+}
+
 /** 响应拦截器 */
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse<BaseResponse>) => {
     const { code, msg } = response.data
+    const url = response.config?.url
     // 兼容 code: 0（业务成功）和 code: 200（HTTP 成功）
     if (code === 0 || code === ApiStatus.success) return response
-    if (code === ApiStatus.unauthorized) handleUnauthorizedError(msg)
+    if (code === ApiStatus.unauthorized) {
+      if (isAdminLoginUrl(url)) {
+        throw createHttpError(msg || $t('httpMsg.requestFailed'), ApiStatus.unauthorized)
+      }
+      handleUnauthorizedError(msg, url)
+    }
     throw createHttpError(msg || $t('httpMsg.requestFailed'), code)
   },
   (error) => {
-    if (error.response?.status === ApiStatus.unauthorized) handleUnauthorizedError()
+    const url = error.config?.url
+    if (error.response?.status === ApiStatus.unauthorized) {
+      if (isAdminLoginUrl(url)) {
+        return Promise.reject(handleError(error))
+      }
+      const serverMsg = getServerErrorMessage(error.response?.data)
+      handleUnauthorizedError(serverMsg, url)
+    }
     return Promise.reject(handleError(error))
   }
 )
@@ -100,13 +119,15 @@ function createHttpError(message: string, code: number) {
   return new HttpError(message, code)
 }
 
-/** 处理401错误（带防抖） */
-function handleUnauthorizedError(message?: string): never {
+/** 处理401错误（带防抖）；登录接口不登出 */
+function handleUnauthorizedError(message?: string, url?: string): never {
   const error = createHttpError(message || $t('httpMsg.unauthorized'), ApiStatus.unauthorized)
 
   if (!isUnauthorizedErrorShown) {
     isUnauthorizedErrorShown = true
-    logOut()
+    if (!isAdminLoginUrl(url)) {
+      logOut()
+    }
 
     unauthorizedTimer = setTimeout(resetUnauthorizedError, UNAUTHORIZED_DEBOUNCE_TIME)
 
@@ -185,9 +206,13 @@ async function request<T = any>(config: ExtendedAxiosRequestConfig): Promise<T> 
 
     return res.data.data as T
   } catch (error) {
-    if (error instanceof HttpError && error.code !== ApiStatus.unauthorized) {
-      const showMsg = config.showErrorMessage !== false
-      showError(error, showMsg)
+    const showMsg = config.showErrorMessage !== false
+    if (error instanceof HttpError) {
+      const isLoginUnauthorized =
+        error.code === ApiStatus.unauthorized && isAdminLoginUrl(config.url)
+      if (error.code !== ApiStatus.unauthorized || isLoginUnauthorized) {
+        showError(error, showMsg)
+      }
     }
     return Promise.reject(error)
   }

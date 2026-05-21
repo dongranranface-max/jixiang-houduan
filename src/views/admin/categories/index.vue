@@ -3,7 +3,7 @@
     <el-card>
       <template #header>
         <div class="flex justify-between items-center">
-          <span>分类管理</span>
+          <span>{{ pageTitle }}</span>
           <el-button type="primary" @click="openDialog()">新增分类</el-button>
         </div>
       </template>
@@ -58,94 +58,116 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import type { FormInstance, FormRules } from 'element-plus'
-import {
-  fetchCategoryList,
-  fetchCreateCategory,
-  fetchUpdateCategory,
-  fetchDeleteCategory
-} from '@/api/modules/admin/product'
-import type { CategoryItem, CategoryParams } from '@/api/modules/admin/product'
+  import { ref, reactive, computed, onMounted, watch } from 'vue'
+  import { useRoute } from 'vue-router'
+  import { ElMessage } from 'element-plus'
+  import { MALL_TYPE_NAME } from '@/constants/mall'
+  import type { FormInstance, FormRules } from 'element-plus'
+  import {
+    fetchCategoryList,
+    fetchCreateCategory,
+    fetchUpdateCategory,
+    fetchDeleteCategory
+  } from '@/api/modules/admin/product'
+  import type { CategoryItem, CategoryParams } from '@/api/modules/admin/product'
 
-const loading = ref(false)
-const tableData = ref<CategoryItem[]>([])
-const dialogVisible = ref(false)
-const submitting = ref(false)
-const editingId = ref<string | null>(null)
-const formRef = ref<FormInstance>()
+  const route = useRoute()
+  const lockedMallType = computed(() => {
+    const t = route.meta.mallType
+    return typeof t === 'number' ? t : undefined
+  })
+  const pageTitle = computed(() =>
+    lockedMallType.value ? `${MALL_TYPE_NAME[lockedMallType.value]} · 分类管理` : '分类管理'
+  )
 
-const formData = reactive<CategoryParams>({
-  name: '',
-  sort: 0
-})
+  const loading = ref(false)
+  const tableData = ref<CategoryItem[]>([])
+  const dialogVisible = ref(false)
+  const submitting = ref(false)
+  const editingId = ref<string | null>(null)
+  const formRef = ref<FormInstance>()
 
-const formRules: FormRules = {
-  name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }]
-}
+  const formData = reactive<CategoryParams>({
+    name: '',
+    sort: 0,
+    mallType: undefined
+  })
 
-const dialogTitle = computed(() => (editingId.value ? '编辑分类' : '新增分类'))
-
-async function loadData() {
-  loading.value = true
-  try {
-    const res = await fetchCategoryList()
-    tableData.value = res
-  } catch {
-    ElMessage.error('加载分类列表失败')
-  } finally {
-    loading.value = false
+  const formRules: FormRules = {
+    name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }]
   }
-}
 
-function openDialog(row?: CategoryItem) {
-  if (row) {
-    editingId.value = row.id
-    formData.name = row.name
-    formData.sort = row.sort
-  } else {
-    editingId.value = null
-    formData.name = ''
-    formData.sort = 0
-  }
-  dialogVisible.value = true
-}
+  const dialogTitle = computed(() => (editingId.value ? '编辑分类' : '新增分类'))
 
-async function handleSubmit() {
-  if (!formRef.value) return
-  const valid = await formRef.value.validate().catch(() => false)
-  if (!valid) return
-
-  submitting.value = true
-  try {
-    if (editingId.value) {
-      await fetchUpdateCategory(editingId.value, formData)
-      ElMessage.success('更新成功')
-    } else {
-      await fetchCreateCategory(formData)
-      ElMessage.success('创建成功')
+  async function loadData() {
+    loading.value = true
+    try {
+      const res = await fetchCategoryList(
+        lockedMallType.value ? { mallType: lockedMallType.value } : undefined
+      )
+      tableData.value = res
+    } catch {
+      ElMessage.error('加载分类列表失败')
+    } finally {
+      loading.value = false
     }
-    dialogVisible.value = false
-    loadData()
-  } catch {
-    ElMessage.error(editingId.value ? '更新失败' : '创建失败')
-  } finally {
-    submitting.value = false
   }
-}
 
-async function handleDelete(id: string) {
-  try {
-    await fetchDeleteCategory(id)
-    ElMessage.success('删除成功')
-    loadData()
-  } catch {
-    ElMessage.error('删除失败')
+  function openDialog(row?: CategoryItem) {
+    if (row) {
+      editingId.value = row.id
+      formData.name = row.name
+      formData.sort = row.sort
+    } else {
+      editingId.value = null
+      formData.name = ''
+      formData.sort = 0
+      formData.mallType = lockedMallType.value
+    }
+    dialogVisible.value = true
   }
-}
 
-onMounted(() => {
-  loadData()
-})
+  async function handleSubmit() {
+    if (!formRef.value) return
+    const valid = await formRef.value.validate().catch(() => false)
+    if (!valid) return
+
+    submitting.value = true
+    try {
+      if (editingId.value) {
+        await fetchUpdateCategory(editingId.value, formData)
+        ElMessage.success('更新成功')
+      } else {
+        await fetchCreateCategory(formData)
+        ElMessage.success('创建成功')
+      }
+      dialogVisible.value = false
+      loadData()
+    } catch {
+      ElMessage.error(editingId.value ? '更新失败' : '创建失败')
+    } finally {
+      submitting.value = false
+    }
+  }
+
+  async function handleDelete(id: string) {
+    try {
+      await fetchDeleteCategory(id)
+      ElMessage.success('删除成功')
+      loadData()
+    } catch {
+      ElMessage.error('删除失败')
+    }
+  }
+
+  watch(
+    () => route.name,
+    () => {
+      loadData()
+    }
+  )
+
+  onMounted(() => {
+    loadData()
+  })
 </script>

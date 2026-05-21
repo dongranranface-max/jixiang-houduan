@@ -19,9 +19,9 @@
       "title": "Search"
     },
     "user": {
-      "userCenter": "User center",
-      "docs": "Document",
-      "github": "Github",
+      "userCenter": "Account",
+      "docs": "Mall (H5)",
+      "github": "API Docs",
       "lockScreen": "Lock screen",
       "logout": "Log out"
     },
@@ -129,11 +129,11 @@
   },
   "login": {
     "leftView": {
-      "title": "A backend system of beauty and efficiency",
-      "subTitle": "A sleek and practical interface for a great user experience"
+      "title": "JiXiang GongShe",
+      "subTitle": "E-commerce operations admin"
     },
-    "title": "Welcome back",
-    "subTitle": "Please enter your account and password to login",
+    "title": "JiXiang GongShe",
+    "subTitle": "Administrator sign in",
     "roles": {
       "super": "Super Admin",
       "admin": "Admin",

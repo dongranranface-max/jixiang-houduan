@@ -1,34 +1,29 @@
 <!doctype html>
-<html>
+<html lang="zh-CN">
   <head>
-    <title>Art Design Pro</title>
+    <title>集享公社管理后台</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Art Design Pro - A modern admin dashboard template built with Vue 3, TypeScript, and Element Plus."
+      content="集享公社电商平台管理后台：商品、订单、用户、理财、提现与系统配置。"
     />
-    <link rel="shortcut icon" type="image/x-icon" href="src/assets/images/favicon.ico" />
+    <link rel="shortcut icon" type="image/png" href="/favicon.png" />
 
     <style>
-      /* 防止页面刷新时白屏的初始样式 */
       html {
-        background-color: #fafbfc;
+        background-color: #faf8f3;
       }
 
       html.dark {
-        background-color: #070707;
+        background-color: #12110e;
       }
     </style>
 
     <script>
-      // 初始化 html class 主题属性
       ;(function () {
         try {
-          if (typeof Storage === 'undefined' || !window.localStorage) {
-            return
-          }
-
+          if (typeof Storage === 'undefined' || !window.localStorage) return
           const themeType = localStorage.getItem('sys-theme')
           if (themeType === 'dark') {
             document.documentElement.classList.add('dark')

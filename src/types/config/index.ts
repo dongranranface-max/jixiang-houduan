@@ -75,8 +75,10 @@ export interface FestivalConfig {
 
 // 系统基础配置
 export interface SystemBasicConfig {
-  // 系统名称
+  // 系统名称（侧栏、登录等短名）
   name: string
+  // 完整名称（浏览器标题等）
+  fullName?: string
   // 系统描述
   description?: string
   // 系统logo

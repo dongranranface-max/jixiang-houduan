@@ -2,15 +2,16 @@
  * 集享公社管理后台路由
  */
 import { AppRouteRecord } from '@/types/router'
+import { mallManageRoutes } from './mall-routes'
 
 export const adminRoutes: AppRouteRecord = {
   path: '/admin',
   name: 'Admin',
   component: '/index/index',
   meta: {
-    title: '集享公社',
-    icon: 'ri:government-line',
-    roles: ['R_ADMIN', 'R_SUPER']
+    title: '运营管理',
+    icon: 'ri:store-2-line',
+    roles: ['R_SUPER', 'R_ADMIN', 'R_MERCHANT']
   },
   children: [
     {
@@ -24,6 +25,7 @@ export const adminRoutes: AppRouteRecord = {
         fixedTab: true
       }
     },
+    mallManageRoutes,
     {
       path: 'users',
       name: 'AdminUsers',
@@ -31,37 +33,8 @@ export const adminRoutes: AppRouteRecord = {
       meta: {
         title: '用户管理',
         icon: 'ri:user-line',
-        keepAlive: true
-      }
-    },
-    {
-      path: 'products',
-      name: 'AdminProducts',
-      component: '/admin/products',
-      meta: {
-        title: '商品管理',
-        icon: 'ri:goods-line',
-        keepAlive: true
-      }
-    },
-    {
-      path: 'categories',
-      name: 'AdminCategories',
-      component: '/admin/categories',
-      meta: {
-        title: '分类管理',
-        icon: 'ri:folder-3-line',
-        keepAlive: true
-      }
-    },
-    {
-      path: 'orders',
-      name: 'AdminOrders',
-      component: '/admin/orders',
-      meta: {
-        title: '订单管理',
-        icon: 'ri:file-list-3-line',
-        keepAlive: true
+        keepAlive: true,
+        roles: ['R_SUPER', 'R_ADMIN']
       }
     },
     {
@@ -71,7 +44,8 @@ export const adminRoutes: AppRouteRecord = {
       meta: {
         title: '理财管理',
         icon: 'ri:bar-chart-box-line',
-        keepAlive: true
+        keepAlive: true,
+        roles: ['R_SUPER', 'R_ADMIN']
       }
     },
     {
@@ -81,7 +55,8 @@ export const adminRoutes: AppRouteRecord = {
       meta: {
         title: '提现管理',
         icon: 'ri:bank-card-line',
-        keepAlive: true
+        keepAlive: true,
+        roles: ['R_SUPER', 'R_ADMIN']
       }
     },
     {
@@ -91,7 +66,8 @@ export const adminRoutes: AppRouteRecord = {
       meta: {
         title: '工单管理',
         icon: 'ri:service-line',
-        keepAlive: true
+        keepAlive: true,
+        roles: ['R_SUPER', 'R_ADMIN']
       }
     },
     {
@@ -101,7 +77,8 @@ export const adminRoutes: AppRouteRecord = {
       meta: {
         title: '系统配置',
         icon: 'ri:settings-line',
-        keepAlive: true
+        keepAlive: true,
+        roles: ['R_SUPER', 'R_ADMIN']
       }
     },
     {
@@ -111,7 +88,8 @@ export const adminRoutes: AppRouteRecord = {
       meta: {
         title: '等级配置',
         icon: 'ri:vip-crown-line',
-        keepAlive: true
+        keepAlive: true,
+        roles: ['R_SUPER', 'R_ADMIN']
       }
     },
     {
@@ -121,7 +99,8 @@ export const adminRoutes: AppRouteRecord = {
       meta: {
         title: '退款管理',
         icon: 'ri:refund-2-line',
-        keepAlive: true
+        keepAlive: true,
+        roles: ['R_SUPER', 'R_ADMIN']
       }
     },
     {
@@ -131,8 +110,43 @@ export const adminRoutes: AppRouteRecord = {
       meta: {
         title: '推荐管理',
         icon: 'ri:user-follow-line',
-        keepAlive: true
+        keepAlive: true,
+        roles: ['R_SUPER', 'R_ADMIN']
       }
+    },
+    {
+      path: 'coupons',
+      name: 'AdminCoupons',
+      component: '/admin/coupons',
+      meta: {
+        title: '优惠券',
+        icon: 'ri:coupon-line',
+        keepAlive: true,
+        roles: ['R_SUPER', 'R_ADMIN']
+      }
+    },
+    {
+      path: 'system',
+      name: 'AdminSystem',
+      component: '/index/index',
+      meta: {
+        title: '系统管理',
+        icon: 'ri:settings-3-line',
+        roles: ['R_SUPER']
+      },
+      children: [
+        {
+          path: 'admins',
+          name: 'AdminSystemAdmins',
+          component: '/admin/system/admins',
+          meta: {
+            title: '管理员与角色',
+            icon: 'ri:shield-user-line',
+            keepAlive: true,
+            roles: ['R_SUPER']
+          }
+        }
+      ]
     }
   ]
 }

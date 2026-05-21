@@ -21,10 +21,13 @@ export interface CategoryParams {
   parentId?: string
   sort?: number
   status?: number
+  mallType?: number
 }
 
-export function fetchCategoryList() {
-  return request.get<CategoryItem[]>({ url: '/api/v1/admin/categories' })
+export function fetchCategoryList(params?: { mallType?: number }) {
+  return request
+    .get<{ list: CategoryItem[] }>({ url: '/api/v1/admin/categories', params })
+    .then((res) => res.list || [])
 }
 
 export function fetchCreateCategory(data: CategoryParams) {
@@ -51,6 +54,7 @@ export interface ProductItem {
   price: string
   originalPrice: string
   requiredPoints: string
+  ecoPointsPrice?: string
   stock: number
   sales: number
   coverImages: string[]
@@ -75,6 +79,7 @@ export interface ProductParams {
   price: string
   originalPrice?: string
   requiredPoints?: string
+  ecoPointsPrice?: string
   stock: number
   coverImages: string[]
   description?: string

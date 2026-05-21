@@ -1,125 +1,102 @@
 /**
- * 快速入口配置
- * 包含：应用列表、快速链接等配置
+ * 集享公社 - 快速入口（业务模块）
  */
-import { WEB_LINKS } from '@/utils/constants'
 import type { FastEnterConfig } from '@/types/config'
 
 const fastEnterConfig: FastEnterConfig = {
-  // 显示条件（屏幕宽度）
   minWidth: 1200,
-  // 应用列表
   applications: [
     {
-      name: '工作台',
-      description: '系统概览与数据统计',
-      icon: 'ri:pie-chart-line',
-      iconColor: '#377dff',
+      name: '数据看板',
+      description: '经营数据与核心指标',
+      icon: 'ri:dashboard-line',
+      iconColor: '#C9A227',
       enabled: true,
       order: 1,
-      routeName: 'Console'
+      routeName: 'AdminDashboard'
     },
     {
-      name: '分析页',
-      description: '数据分析与可视化',
-      icon: 'ri:game-line',
-      iconColor: '#ff3b30',
+      name: '订单管理',
+      description: '订单查询、发货与售后',
+      icon: 'ri:file-list-3-line',
+      iconColor: '#1D84FF',
       enabled: true,
       order: 2,
-      routeName: 'Analysis'
+      routeName: 'AdminOrders'
     },
     {
-      name: '礼花效果',
-      description: '动画特效展示',
-      icon: 'ri:loader-line',
-      iconColor: '#7A7FFF',
+      name: '商品管理',
+      description: '商品与 SKU 维护',
+      icon: 'ri:goods-line',
+      iconColor: '#60C041',
       enabled: true,
       order: 3,
-      routeName: 'Fireworks'
+      routeName: 'AdminProductsOnSale'
     },
     {
-      name: '聊天',
-      description: '即时通讯功能',
+      name: '用户管理',
+      description: '会员与积分账户',
       icon: 'ri:user-line',
-      iconColor: '#13DEB9',
+      iconColor: '#B48DF3',
       enabled: true,
       order: 4,
-      routeName: 'Chat'
+      routeName: 'AdminUsers'
     },
     {
-      name: '官方文档',
-      description: '使用指南与开发文档',
-      icon: 'ri:bill-line',
-      iconColor: '#ffb100',
+      name: '提现管理',
+      description: '提现审核与打款',
+      icon: 'ri:bank-card-line',
+      iconColor: '#F9901F',
       enabled: true,
       order: 5,
-      link: WEB_LINKS.DOCS
+      routeName: 'AdminWithdrawals'
     },
     {
-      name: '技术支持',
-      description: '技术支持与问题反馈',
-      icon: 'ri:user-location-line',
-      iconColor: '#ff6b6b',
+      name: '系统配置',
+      description: '平台参数与运营配置',
+      icon: 'ri:settings-line',
+      iconColor: '#6B6B6B',
       enabled: true,
       order: 6,
-      link: WEB_LINKS.COMMUNITY
-    },
-    {
-      name: '更新日志',
-      description: '版本更新与变更记录',
-      icon: 'ri:gamepad-line',
-      iconColor: '#38C0FC',
-      enabled: true,
-      order: 7,
-      routeName: 'ChangeLog'
-    },
-    {
-      name: '哔哩哔哩',
-      description: '技术分享与交流',
-      icon: 'ri:bilibili-line',
-      iconColor: '#FB7299',
-      enabled: true,
-      order: 8,
-      link: WEB_LINKS.BILIBILI
+      routeName: 'AdminConfig'
     }
   ],
-  // 快速链接
   quickLinks: [
     {
-      name: '登录',
+      name: '分类管理',
       enabled: true,
       order: 1,
-      routeName: 'Login'
+      routeName: 'AdminCategories'
     },
     {
-      name: '注册',
+      name: '理财管理',
       enabled: true,
       order: 2,
-      routeName: 'Register'
+      routeName: 'AdminFinancial'
     },
     {
-      name: '忘记密码',
+      name: '工单管理',
       enabled: true,
       order: 3,
-      routeName: 'ForgetPassword'
+      routeName: 'AdminTickets'
     },
     {
-      name: '定价',
+      name: '退款管理',
       enabled: true,
       order: 4,
-      routeName: 'Pricing'
+      routeName: 'AdminRefunds'
     },
     {
-      name: '个人中心',
+      name: '等级配置',
       enabled: true,
       order: 5,
-      routeName: 'UserCenter'
+      routeName: 'AdminLevels'
     },
     {
-      name: '留言管理',
+      name: '推荐管理',
       enabled: true,
       order: 6,
-      routeName: 'ArticleComment'
+      routeName: 'AdminReferral'
     }
   ]
 }

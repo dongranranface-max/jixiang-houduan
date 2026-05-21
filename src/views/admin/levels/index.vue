@@ -39,7 +39,9 @@
         <el-table-column label="说明">
           <template #default="{ row }">
             <span class="text-gray-500 text-sm">
-              团队业绩达到 {{ Number(row.minPerformance).toLocaleString() }} 可升级，每日获得订单流水的 {{ row.dailyBonus }}%
+              团队业绩达到
+              {{ Number(row.minPerformance).toLocaleString() }} 可升级，每日获得订单流水的
+              {{ row.dailyBonus }}%
             </span>
           </template>
         </el-table-column>
@@ -49,44 +51,44 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import { fetchLevelConfigs, fetchUpdateLevelConfig } from '@/api/modules/admin/level'
-import type { LevelConfigItem } from '@/api/modules/admin/level'
+  import { ref, onMounted } from 'vue'
+  import { ElMessage } from 'element-plus'
+  import { fetchLevelConfigs, fetchUpdateLevelConfig } from '@/api/modules/admin/level'
+  import type { LevelConfigItem } from '@/api/modules/admin/level'
 
-const loading = ref(false)
-const tableData = ref<LevelConfigItem[]>([])
+  const loading = ref(false)
+  const tableData = ref<LevelConfigItem[]>([])
 
-async function loadData() {
-  loading.value = true
-  try {
-    const res = await fetchLevelConfigs()
-    tableData.value = res
-  } catch {
-    ElMessage.error('加载失败')
-  } finally {
-    loading.value = false
-  }
-}
-
-async function openEdit() {
-  try {
-    for (const item of tableData.value) {
-      await fetchUpdateLevelConfig(item.level, {
-        level: item.level,
-        name: item.name,
-        icon: item.icon,
-        minPerformance: item.minPerformance,
-        dailyBonus: item.dailyBonus
-      })
+  async function loadData() {
+    loading.value = true
+    try {
+      const res = await fetchLevelConfigs()
+      tableData.value = res
+    } catch {
+      ElMessage.error('加载失败')
+    } finally {
+      loading.value = false
     }
-    ElMessage.success('保存成功')
-  } catch {
-    ElMessage.error('保存失败')
   }
-}
 
-onMounted(() => {
-  loadData()
-})
+  async function openEdit() {
+    try {
+      for (const item of tableData.value) {
+        await fetchUpdateLevelConfig(String(item.level), {
+          level: item.level,
+          name: item.name,
+          icon: item.icon,
+          minPerformance: item.minPerformance,
+          dailyBonus: String(item.dailyBonus)
+        })
+      }
+      ElMessage.success('保存成功')
+    } catch {
+      ElMessage.error('保存失败')
+    }
+  }
+
+  onMounted(() => {
+    loadData()
+  })
 </script>

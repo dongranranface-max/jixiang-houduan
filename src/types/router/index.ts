@@ -66,6 +66,12 @@ export interface RouteMeta extends Record<string | number | symbol, unknown> {
   authMark?: string
   /** 父级路径 */
   parentPath?: string
+  /** 商品列表默认状态筛选（商品管理子菜单） */
+  productStatus?: number
+  /** 商城类型：1消费 2换购 3兑换 */
+  mallType?: number
+  /** 订单列表默认订单类型（与 mallType 一致） */
+  orderType?: number
 }
 
 /**

@@ -15,17 +15,21 @@ export interface OrderItem {
   payAmount: string
   pointsEarned: string
   remark: string
-  logistics: {
+  expressCompany?: string
+  expressNo?: string
+  logistics?: {
     company: string
     trackingNo: string
-    status: string
+    status?: string
   } | null
   items: {
     productName: string
-    coverImage: string
-    price: string
+    coverImage?: string
+    price: string | number
     quantity: number
-    specs: string
+    specs?: string
+    skuSpecs?: Record<string, string>
+    subtotal?: string | number
   }[]
   createdAt: string
   paidAt: string
@@ -50,6 +54,9 @@ export function fetchOrderList(params: {
   return request.get<OrderListResponse>({ url: '/api/v1/admin/orders', params })
 }
 
-export function fetchShipOrder(orderNo: string, logistics: { company: string; trackingNo: string }) {
+export function fetchShipOrder(
+  orderNo: string,
+  logistics: { company: string; trackingNo: string }
+) {
   return request.post({ url: `/api/v1/admin/orders/${orderNo}/ship`, data: logistics })
 }

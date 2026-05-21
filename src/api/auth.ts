@@ -1,4 +1,5 @@
 import request from '@/utils/http'
+import { mapAdminRoleToFrontend } from '@/constants/mall'
 
 /** 管理员登录响应（后端返回的原始格式） */
 interface AdminLoginData {
@@ -17,6 +18,8 @@ interface AdminProfileData {
   username: string
   nickname: string
   role: string
+  roles?: string[]
+  buttons?: string[]
 }
 
 /**
@@ -36,15 +39,20 @@ export function fetchLogin(params: { username: string; password: string }) {
  * @returns 管理员信息（适配 store 的 UserInfo 格式）
  */
 export function fetchGetUserInfo() {
-  return request.get<AdminProfileData>({
-    url: '/api/v1/admin/profile'
-  }).then((res) => {
-    // 适配：后端返回 id，store 需要 userId
-    return {
-      userId: res.id,
-      username: res.username,
-      nickname: res.nickname,
-      role: res.role,
-    } as Api.Auth.UserInfo
-  })
+  return request
+    .get<AdminProfileData>({
+      url: '/api/v1/admin/profile'
+    })
+    .then((res) => {
+      const roles = res.roles?.length ? res.roles : mapAdminRoleToFrontend(res.role)
+      return {
+        userId: res.id,
+        userName: res.username,
+        username: res.username,
+        nickname: res.nickname,
+        role: res.role,
+        roles,
+        buttons: res.buttons || []
+      } as Api.Auth.UserInfo
+    })
 }

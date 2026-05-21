@@ -11,13 +11,13 @@ export interface FinancialProductItem {
   rateTypeName: string
   displayRate: string
   rateValue: string
-  annualRate: string
+  annualRate: string | number
   cycle: number
   cycleUnit: string
-  minAmount: string
-  maxAmount: string
+  minAmount: string | number
+  maxAmount: string | number
   earlyRedeemFee: string
-  totalInvested: string
+  totalInvested: string | number
   investedCount: number
   riskLevel: number
   riskName: string
@@ -27,20 +27,21 @@ export interface FinancialProductItem {
 }
 
 export interface FinancialProductParams {
-  name: string
+  name?: string
   description?: string
-  rateType: number
-  rateValue: string
-  cycle: number
-  minAmount: string
-  maxAmount: string
-  earlyRedeemFee?: string
-  riskLevel: number
+  type?: string | number
+  annualRate?: number | string
+  cycleDays?: number
+  minAmount?: number | string
+  totalAmount?: number | string
+  earlyRedeemFee?: number | string
   status?: number
 }
 
 export function fetchFinancialProductList() {
-  return request.get<FinancialProductItem[]>({ url: '/api/v1/admin/financial/products' })
+  return request
+    .get<{ list: FinancialProductItem[] }>({ url: '/api/v1/admin/financial/products' })
+    .then((res) => res.list || [])
 }
 
 export function fetchCreateFinancialProduct(data: FinancialProductParams) {
@@ -55,22 +56,20 @@ export function fetchDeleteFinancialProduct(id: string) {
   return request.del({ url: `/api/v1/admin/financial/products/${id}` })
 }
 
-// 持仓管理
 export interface HoldingItem {
-  holdingId: string
+  id: string
   userId: string
   userPhone: string
   productId: string
   productName: string
-  annualRate: string
-  amount: string
-  profit: string
-  totalProfit: string
+  amount: string | number
+  expectedEarning?: number
+  actualEarning?: number
+  startDate?: string
+  endDate?: string
   status: number
   statusName: string
-  autoRenew: boolean
   createdAt: string
-  expireAt: string
 }
 
 export interface HoldingListResponse {

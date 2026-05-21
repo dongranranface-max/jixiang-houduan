@@ -19,9 +19,9 @@
       "title": "搜索"
     },
     "user": {
-      "userCenter": "个人中心",
-      "docs": "使用文档",
-      "github": "Github",
+      "userCenter": "账号信息",
+      "docs": "用户端商城",
+      "github": "API 文档",
       "lockScreen": "锁定屏幕",
       "logout": "退出登录"
     },
@@ -129,19 +129,19 @@
   },
   "login": {
     "leftView": {
-      "title": "一款兼具设计美学与高效开发的后台系统",
-      "subTitle": "美观实用的界面，经过视觉优化，确保卓越的用户体验"
+      "title": "集享公社",
+      "subTitle": "电商运营管理平台 · 商品订单与用户一体化管理"
     },
-    "title": "欢迎回来",
-    "subTitle": "输入您的账号和密码登录",
+    "title": "集享公社",
+    "subTitle": "管理员登录",
     "roles": {
       "super": "超级管理员",
       "admin": "管理员",
       "user": "普通用户"
     },
     "placeholder": {
-      "username": "请输入账号",
-      "password": "请输入密码",
+      "username": "管理员账号",
+      "password": "登录密码",
       "slider": "请拖动滑块完成验证"
     },
     "sliderText": "按住滑块拖动",
@@ -149,11 +149,11 @@
     "rememberPwd": "记住密码",
     "forgetPwd": "忘记密码",
     "btnText": "登录",
-    "noAccount": "还没有账号？",
-    "register": "注册",
+    "noAccount": "需要开通账号？",
+    "register": "联系超级管理员",
     "success": {
       "title": "登录成功",
-      "message": "欢迎回来"
+      "message": "欢迎进入"
     }
   },
   "forgetPassword": {
